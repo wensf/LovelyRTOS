@@ -29,14 +29,14 @@ void Task_Demo(void)
 	}
 }	
 
-void PT_OSTask_Create(void)
+void LRT_OSTask_Create(void)
 {
 	
 }
 
 int __attribute__((noreturn)) main(void)
 {
-	OS_Init();
+	LRT_OS_Int();
 	
 	OS_Task_Create(&TCB_Demo,Task_Demo,&TASK_1_STK[TASK_1_STK_SIZE-1],2);
     OS_Task_Create(&TCB_LED,Task_LED, &TASK_2_STK[TASK_2_STK_SIZE-1],5);

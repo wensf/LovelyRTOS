@@ -12,73 +12,54 @@ unsigned long task_gui_ticks = 0;
 
 unsigned short fb[LCD_H][LCD_W];
 
-#define SPI_CLK        RCC_APB2Periph_SPI1
-#define SPI_PORT            GPIOA         
-#define SPI_DC_PIN     GPIO_Pin_3
-#define SPI_CS_PIN     GPIO_Pin_4
-#define SPI_MOSI_PIN   GPIO_Pin_7
-#define SPI_MISO_PIN   GPIO_Pin_6
-#define SPI_RST_PIN    GPIO_Pin_2
-#define SPI_SCK_PIN    GPIO_Pin_5
+#define SPI_CLK        			RCC_APB2Periph_SPI1
+#define SPI_PORT            	 	 GPIOA         
+#define SPI_DC_PIN     			GPIO_Pin_3
+#define SPI_CS_PIN     			GPIO_Pin_4
+#define SPI_MOSI_PIN   			GPIO_Pin_7
+#define SPI_MISO_PIN   			GPIO_Pin_6
+#define SPI_RST_PIN    			GPIO_Pin_2
+#define SPI_SCK_PIN    			GPIO_Pin_5
 
-#define CS_ENABLE()   	GPIO_ResetBits(SPI_PORT,SPI_CS_PIN)
-#define CS_DISABLE()  	GPIO_SetBits(SPI_PORT,SPI_CS_PIN)
-#define DC_SET() 		GPIO_SetBits(SPI_PORT,SPI_DC_PIN)
-#define DC_CLEAR() 		GPIO_ResetBits(SPI_PORT,SPI_DC_PIN)
-#define RST_SET() 		GPIO_SetBits(SPI_PORT,SPI_RST_PIN)
-#define RST_CLEAR() 	GPIO_ResetBits(SPI_PORT,SPI_RST_PIN)
+#define CS_ENABLE()   			GPIO_ResetBits(SPI_PORT,SPI_CS_PIN)
+#define CS_DISABLE()  			GPIO_SetBits(SPI_PORT,SPI_CS_PIN)
+#define DC_SET() 				GPIO_SetBits(SPI_PORT,SPI_DC_PIN)
+#define DC_CLEAR() 				GPIO_ResetBits(SPI_PORT,SPI_DC_PIN)
+#define RST_SET() 				GPIO_SetBits(SPI_PORT,SPI_RST_PIN)
+#define RST_CLEAR() 			GPIO_ResetBits(SPI_PORT,SPI_RST_PIN)
 
-#if USED_SOFT_SPI
-#define SCK_SET() GPIO_SetBits(SPI_PORT,SPI_SCK_PIN) 
-#define SCK_CLR() GPIO_ResetBits(SPI_PORT,SPI_SCK_PIN)  
-#define SDA_SET() GPIO_SetBits(SPI_PORT,SPI_MOSI_PIN) 
-#define SDA_CLR() GPIO_ResetBits(SPI_PORT,SPI_MOSI_PIN)
-#endif
+#define SPI_CLK_GPIO_CLK 		RCC_AHB1Periph_GPIOA
+#define SPI_MISO_GPIO_CLK 		RCC_AHB1Periph_GPIOA
+#define SPI_MOSI_GPIO_CLK 		RCC_AHB1Periph_GPIOA
+#define SPI_CS_GPIO_CLK 		RCC_AHB1Periph_GPIOA
 
-#define SPI_CLK_GPIO_CLK 	RCC_AHB1Periph_GPIOA
-#define SPI_MISO_GPIO_CLK 	RCC_AHB1Periph_GPIOA
-#define SPI_MOSI_GPIO_CLK 	RCC_AHB1Periph_GPIOA
-#define SPI_CS_GPIO_CLK 	RCC_AHB1Periph_GPIOA
 
-void delay_us(void)
+#if 0
+static unsigned char SPI_write( unsigned char byte)
 {
-//	__ASM("NOP");
+  /*!< Loop while DR register in not empty */
+  while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
+
+  /*!< Send byte through the SPI1 peripheral */
+  SPI_I2S_SendData(SPI1, byte);
+
+  /*!< Wait to receive a byte */
+  while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
+
+  /*!< Return the byte read from the SPI bus */
+  return SPI_I2S_ReceiveData(SPI1);
 }
+#else
 
 static void SPI_write( unsigned char byte)
 {
-	#if USED_SOFT_SPI
-	for ( int i = 0; i < 8; i++ )
-	{
-		SCK_CLR();
-		
-		if ( byte & 0x80 )
-		{
-			SDA_SET();
-		}else{
-			SDA_CLR();
-		}
-		delay_us();
-		SCK_SET();
-		byte <<= 1;
-		delay_us();
-	}
+  while((SPI1->SR & SPI_I2S_FLAG_BSY) != RESET);  //??SPI??,??????SPI_I2S_FLAG_TXE??????,????SPI_I2S_FLAG_BSY??
+	SPI1->DR = byte;
 	
-	SCK_CLR();
-	#else
-	/*!< Loop while DR register in not empty */
-	while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
-
-	/*!< Send byte through the SPI1 peripheral */
-	SPI_I2S_SendData(SPI1, byte);
-
-	/*!< Wait to receive a byte */
-	while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
-
-	/*!< Return the byte read from the SPI bus */
-	
-	#endif
+  /*!< Loop while DR register in not empty */
+  while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
 }
+#endif
 
 void LCD_WrCmd(unsigned char val)
 {
@@ -100,39 +81,22 @@ void LCD_WrDat(unsigned char val)
 
 void LCD_Pin_Configuration(void)
 {
-	#if USED_SOFT_SPI	
-	GPIO_InitTypeDef init;  
-	RCC_AHB1PeriphClockCmd ( SPI_CLK, ENABLE);  	
-	
-	init.GPIO_Mode  = GPIO_Mode_OUT;   
-	init.GPIO_OType = GPIO_OType_PP;  
-	init.GPIO_PuPd  = GPIO_PuPd_UP;	 
-	init.GPIO_Speed = GPIO_Speed_100MHz;  
-	
-	init.GPIO_Pin = SPI_DC_PIN;	 
-	GPIO_Init(SPI_PORT, &init);
-
-	init.GPIO_Pin = SPI_RST_PIN;	 
-	GPIO_Init(SPI_PORT, &init);
-
-	init.GPIO_Pin = SPI_SCK_PIN;	 
-	GPIO_Init(SPI_PORT, &init);
-	
-	init.GPIO_Pin = SPI_MOSI_PIN;	 
-	GPIO_Init(SPI_PORT, &init);	
-	
-	init.GPIO_Pin = SPI_CS_PIN;	 
-	GPIO_Init(SPI_PORT, &init);	
-	
-	GPIO_SetBits(SPI_PORT,SPI_RST_PIN);
-	GPIO_SetBits(SPI_PORT,SPI_DC_PIN);
-	GPIO_ResetBits(SPI_PORT,SPI_SCK_PIN);
-	GPIO_SetBits(SPI_PORT,SPI_MOSI_PIN);
-	GPIO_SetBits(SPI_PORT,SPI_CS_PIN);
-	#else
 	/*!< SPI pins configuration *************************************************/
 
-	GPIO_InitTypeDef GPIO_InitStructure;	
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	/* Enable SPI Clock */
+
+	RCC_APB2PeriphClockCmd ( RCC_APB2Periph_SPI1, ENABLE);	
+	
+	/*!< Enable GPIO clocks */
+						 
+	RCC_AHB1PeriphClockCmd ( RCC_AHB1Periph_GPIOA, ENABLE);
+	
+	/*!< Connect SPI pins to AF5 */  
+	GPIO_PinAFConfig(SPI_PORT, GPIO_PinSource5, GPIO_AF_SPI1);
+	GPIO_PinAFConfig(SPI_PORT, GPIO_PinSource6, GPIO_AF_SPI1);
+	GPIO_PinAFConfig(SPI_PORT, GPIO_PinSource7, GPIO_AF_SPI1);	
 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -143,12 +107,6 @@ void LCD_Pin_Configuration(void)
 	GPIO_InitStructure.GPIO_Pin = SPI_SCK_PIN | SPI_MOSI_PIN | SPI_MISO_PIN;
 	GPIO_Init(SPI_PORT, &GPIO_InitStructure);
 
-
-	/*!< Connect SPI pins to AF5 */  
-	GPIO_PinAFConfig(SPI_PORT, SPI_SCK_PIN,  GPIO_AF_SPI1);
-	GPIO_PinAFConfig(SPI_PORT, SPI_MISO_PIN, GPIO_AF_SPI1);
-	GPIO_PinAFConfig(SPI_PORT, SPI_MOSI_PIN, GPIO_AF_SPI1);
-
 	/*!< Configure CS RST D/C pin in output pushpull mode ********************/
 
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
@@ -158,8 +116,7 @@ void LCD_Pin_Configuration(void)
 	
 	GPIO_InitStructure.GPIO_Pin   = SPI_CS_PIN | SPI_DC_PIN | SPI_RST_PIN;	
 	GPIO_Init(SPI_PORT, &GPIO_InitStructure);	
-		
-	CS_DISABLE();		
+				
 	GPIO_SetBits(SPI_PORT,SPI_RST_PIN);
 	GPIO_SetBits(SPI_PORT,SPI_DC_PIN);	
 	
@@ -168,22 +125,14 @@ void LCD_Pin_Configuration(void)
 	SPI_Cmd( SPI1,DISABLE );
 	SPI_I2S_DeInit(SPI1);
 	
-
-	/* Enable SPI Clock */
-
-	/*!< Enable GPIO clocks */
-						 
-	RCC_APB2PeriphClockCmd ( RCC_APB2Periph_SPI1, ENABLE);
-					 
-	RCC_AHB1PeriphClockCmd ( RCC_AHB1Periph_GPIOA, ENABLE);	
-	
+					 	
 	SPI_InitTypeDef  SPI_InitStructure;
 
-	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+	SPI_InitStructure.SPI_Direction = SPI_Direction_1Line_Tx;
 	SPI_InitStructure.SPI_Mode      = SPI_Mode_Master;
 	SPI_InitStructure.SPI_DataSize  = SPI_DataSize_8b;
 	SPI_InitStructure.SPI_CPOL      = SPI_CPOL_Low;
-	SPI_InitStructure.SPI_CPHA      = SPI_CPHA_2Edge;
+	SPI_InitStructure.SPI_CPHA      = SPI_CPHA_1Edge;
 	SPI_InitStructure.SPI_NSS       = SPI_NSS_Soft;
 	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
 
@@ -194,16 +143,18 @@ void LCD_Pin_Configuration(void)
 	/*!< Enable the sFLASH_SPI  */
 	SPI_Cmd(SPI1, ENABLE);	
 	
-	#endif
+	CS_DISABLE();
 }
 
 void lcd_init(void)
 {
-	CS_ENABLE();  //´ò¿ªÆ¬Ñ¡Ê¹ÄÜ
+	CS_ENABLE();
 	RST_CLEAR();
 	OS_Delay(20);
 	RST_SET();
 	OS_Delay(20);
+
+	CS_DISABLE();
 	
 	//************* Start Initial Sequence **********// 
 	LCD_WrCmd(0xCF);  
@@ -409,10 +360,8 @@ void Task_GUI(void)
 	
 	while(1)
 	{
-		OS_Delay(1000);
+		OS_Delay(100);
 		LCD_Fill(color++);	
-		// Draw_Bitmap((LCD_W-230)/2,(LCD_H-320)/2,230,320,gImage_girl);
-		// LCD_Sync_Frame_Ex((LCD_W-230)/2,(LCD_H-320)/2,230,320);
 		LCD_Sync_Frame();		
 		task_gui_ticks++;
 	}

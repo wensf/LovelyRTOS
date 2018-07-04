@@ -34,7 +34,7 @@ void SysTick_Handler(void)
 
 OS_STK *g_OS_CPU_ExceptStkBase;
 
-void OS_Init(void)
+void LRT_OS_Int(void)
 {
 	g_OS_CPU_ExceptStkBase = OS_CPU_ExceptStk + OS_EXCEPT_STK_SIZE - 1;
 	

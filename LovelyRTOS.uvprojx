@@ -335,7 +335,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F429_439xx,USED_SOFT_SPI</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F429_439xx</Define>
               <Undefine></Undefine>
               <IncludePath>.\Application\FWLIB\CMSIS\Include;.\Application\FWLIB\CMSIS\Device\ST\STM32F4xx\Include;.\Application\FWLIB\STM32F4xx_StdPeriph_Driver\inc;.\Application\Application;.\Application\RTOS;.\Application\Driver;.\Application\Task;.\Application\LovelyWin</IncludePath>
             </VariousControls>
@@ -455,13 +455,6 @@
         </Group>
         <Group>
           <GroupName>Driver</GroupName>
-          <Files>
-            <File>
-              <FileName>MYADC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Application\Driver\MYADC.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>Task</GroupName>
