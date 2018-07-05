@@ -53,7 +53,7 @@ static unsigned char SPI_write( unsigned char byte)
 
 static void SPI_write( unsigned char byte)
 {
-  while((SPI1->SR & SPI_I2S_FLAG_BSY) != RESET);  //??SPI??,??????SPI_I2S_FLAG_TXE??????,????SPI_I2S_FLAG_BSY??
+  while((SPI1->SR & SPI_I2S_FLAG_BSY) != RESET);
 	SPI1->DR = byte;
 	
   /*!< Loop while DR register in not empty */

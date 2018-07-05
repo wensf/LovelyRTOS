@@ -34,6 +34,9 @@ OSCtxSw         PROC
                     
 OSStart_Asm     PROC
                 EXPORT  OSStart_Asm
+					
+	extern 	g_OS_CPU_ExceptStkBase		
+		
                 LDR     R0, =NVIC_SYSPRI14                                  ; Set the PendSV exception priority
                 LDR     R1, =NVIC_PENDSV_PRI
                 STRB    R1, [R0]
@@ -41,9 +44,9 @@ OSStart_Asm     PROC
                 MOVS    R0, #0                                              ; Set the PSP to 0 for initial context switch call
                 MSR     PSP, R0
 
-                ;LDR     R0, =g_OS_CPU_ExceptStkBase                           ; Initialize the MSP to the OS_CPU_ExceptStkBase
-                ;LDR     R1, [R0]
-                ;MSR     MSP, R1    
+                LDR     R0, =g_OS_CPU_ExceptStkBase                           ; Initialize the MSP to the OS_CPU_ExceptStkBase
+                LDR     R1, [R0]
+                MSR     MSP, R1    
 
                 LDR     R0, =NVIC_INT_CTRL                                  ; Trigger the PendSV exception (causes context switch)
                 LDR     R1, =NVIC_PENDSVSET
