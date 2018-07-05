@@ -14,8 +14,9 @@ typedef struct LRT_oofs_tag LRT_oofs;
 struct Object_tag
 {
 	char object_name[LRT_OBJECT_NAME_SIZE];
-	LRT_oofs *oofs;
 	int object_type;
+	int identifier;
+	LRT_oofs *oofs;	
 };
 
 /**
@@ -24,14 +25,24 @@ struct Object_tag
 
 struct LRT_oofs_tag
 {
-	LRT_Object* (*f_open)( const char *object_name, int method, int attr );
-	int (*f_read)( LRT_Object *object, int len, char *buf );
-	int (*f_write)( LRT_Object *object, int len, const char *buf );
-	int (*f_ioctl) (LRT_Object *object, int cmd, int param );
-	int (*f_close)( LRT_Object *object );
+	int (*f_open)( const char *object_name, int method, int attr );
+	int (*f_read)( int identifier, int len, char *buf );
+	int (*f_write)( int identifier, int len, const char *buf );
+	int (*f_ioctl)(int identifier, int cmd, int param );
+	int (*f_close)( int identifier );
 };
 
 extern LRT_RET LRT_Object_Init(void);
 extern int LRT_Object_Register( LRT_Object *object );
+
+
+/**
+ * Application Layer API declaration
+ */
+extern int LRT_Open( const char *object_name, int method, int attr );
+extern int LRT_Read( int object_id, int len, char *buf );
+extern int LRT_Write( int object_id, int len, const char *buf );
+extern int LRT_IOCtl( int object_id, int cmd, int param );
+extern int LRT_Close( int object_id );
 
 #endif

@@ -7,29 +7,25 @@
 LRT_Object led_object;
 
 /**
- * LED Low Level Implementation
- */
-
-/**
  * Implementation of Object Operation Function Set (OOFS)
  */
 
-LRT_Object *LED_open( const char *name, int method, int attr )
+int LED_open( const char *name, int method, int attr )
 {
-	return &led_object;
+	return led_object.identifier;
 }
 
-int LED_read( LRT_Object *object, int len, char *buf )
-{
-	return 0;
-}
-
-int LED_write( LRT_Object *object, int len, const char *buf )
+int LED_read( int identifier, int len, char *buf )
 {
 	return 0;
 }
 
-int LED_ioctl( LRT_Object *object, int cmd, int param )
+int LED_write( int identifier, int len, const char *buf )
+{
+	return 0;
+}
+
+int LED_ioctl( int identifier, int cmd, int param )
 {
 	switch ( cmd )
 	{
@@ -46,7 +42,7 @@ int LED_ioctl( LRT_Object *object, int cmd, int param )
 	return 0;
 }
 
-int LED_close( LRT_Object *object )
+int LED_close( int identifier )
 {
 	LED_set(0);
 	
