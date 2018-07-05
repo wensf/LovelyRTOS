@@ -16,7 +16,7 @@ void LED_GPIO_Init(void)
 	GPIO_InitStructure.GPIO_Pin = LED1_PIN;	 
 	GPIO_Init(LED1_PORT, &GPIO_InitStructure);		
 	
-	GPIO_ResetBits(LED1_PORT,LED1_PIN);  
+	GPIO_SetBits(LED1_PORT,LED1_PIN);  
 }
 
 void LED_set( int enable )

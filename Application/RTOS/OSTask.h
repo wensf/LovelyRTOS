@@ -2,14 +2,14 @@
 #define __OSTASK_H__
 
 #define OS_EXCEPT_STK_SIZE 1024
-#define TASK_1_STK_SIZE 128
-#define TASK_2_STK_SIZE 128
-#define TASK_3_STK_SIZE 128
+#define TASK_1_STK_SIZE 512
+#define TASK_2_STK_SIZE 512
+#define TASK_3_STK_SIZE 512
 
 #define TASK_IDLE_STK_SIZE 1024
-#define OS_TASK_MAX_NUM 32
+#define OS_TASK_MAX_NUM 4
 #define OS_HZ 100
-#define OS_A_TICK 1000/OS_HZ
+#define OS_A_TICK (1000/OS_HZ)
 
 
 typedef signed char OS_S8;
@@ -41,7 +41,7 @@ typedef enum OS_TASK_STA
 typedef struct OS_TCB
 {
 	OS_STK *StkAddr;
-	OS_U32 TimeDly;
+	OS_S32 TimeDly;
 	OS_TASK_STA State;
 }OS_TCB,*OS_TCBP;
 

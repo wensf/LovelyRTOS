@@ -7,14 +7,31 @@
 unsigned long Task_LED_tick;
 
 #include "Task_GUI.h"
-#include <string.h>
+#include "LRT_Object.h"
 
 void Task_LED(void)
 {
-	while(1)
+	int id = LRT_Open("LED1", 0, 0 );
+	
+	if ( id != -1 )
 	{
-		Task_LED_tick++;
+		while ( 1 )
+		{
+			Task_LED_tick++;
 
-		OS_Delay(500);
+			OS_Delay(1000);
+			
+			LRT_IOCtl ( id, 0, 0 );
+			
+			OS_Delay(1000);
+			
+			LRT_IOCtl ( id, 1, 0 );
+		}
+		
+		LRT_Close( id );
+		
+	}else{
+		
+		LRT_Printf("Open LED1 Failed\n");
 	}
 }

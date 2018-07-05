@@ -4,7 +4,8 @@
 
 #include "BSP_LED.h"
 
-LRT_Object led_object;
+static LRT_Object led_object;
+static LRT_oofs led_oofs;
 
 /**
  * Implementation of Object Operation Function Set (OOFS)
@@ -58,11 +59,13 @@ void Driver_LED_init( int identifier )
 {
 	LED_GPIO_Init();
 	
-	led_object.oofs->f_open  = LED_open;
-	led_object.oofs->f_read  = LED_read;
-	led_object.oofs->f_write = LED_write;
-	led_object.oofs->f_ioctl = LED_ioctl;
-	led_object.oofs->f_close = LED_close;
+	led_oofs.f_open  = LED_open;
+	led_oofs.f_read  = LED_read;
+	led_oofs.f_write = LED_write;
+	led_oofs.f_ioctl = LED_ioctl;
+	led_oofs.f_close = LED_close;
+	
+	led_object.oofs  = &led_oofs;
 	led_object.object_type   = OBJECT_TYPE_IO;
 	strcpy(led_object.object_name, "LED1");
 	

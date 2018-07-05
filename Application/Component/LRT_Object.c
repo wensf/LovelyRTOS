@@ -10,7 +10,7 @@ LRT_RET LRT_Object_Init(void)
 	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-		*(&op) = (LRT_Object*)0;
+	//	*(&op) = (LRT_Object*)0;
 	}
 	
 	return LRT_OK;
@@ -39,7 +39,7 @@ int LRT_Open( const char *object_name, int method, int attr )
 {
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-		if ( 0 == Object_Table[i] )
+		if ( 0 != Object_Table[i] )
 		{
 			if ( !strncmp( Object_Table[i]->object_name,object_name, LRT_OBJECT_NAME_SIZE) )
 			{
@@ -58,7 +58,7 @@ int LRT_Read( int object_id, int len, char *buf )
 	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-		if ( 0 == Object_Table[i] )
+		if ( 0 != Object_Table[i] )
 		{
 			if ( Object_Table[i]->identifier == object_id )
 			{
@@ -87,7 +87,7 @@ int LRT_Write( int object_id, int len, const char *buf )
 	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-		if ( 0 == Object_Table[i] )
+		if ( 0 != Object_Table[i] )
 		{
 			if ( Object_Table[i]->identifier == object_id )
 			{
@@ -116,7 +116,7 @@ int LRT_IOCtl( int object_id, int cmd, int param )
 	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-		if ( 0 == Object_Table[i] )
+		if ( 0 != Object_Table[i] )
 		{
 			if ( Object_Table[i]->identifier == object_id )
 			{
@@ -145,7 +145,7 @@ int LRT_Close( int object_id )
 	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-		if ( 0 == Object_Table[i] )
+		if ( 0 != Object_Table[i] )
 		{
 			if ( Object_Table[i]->identifier == object_id )
 			{

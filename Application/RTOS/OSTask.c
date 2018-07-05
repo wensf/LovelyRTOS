@@ -39,8 +39,14 @@ void OS_Task_Switch(void)
 		if( tcb_p->State == TASK_READY ) break;
 	}
 	OS_ENTER_CRITICAL();
-	g_OS_Tcb_HighRdyP = tcb_p;
-	g_Prio_HighRdy    = i;
+	if ( i < OS_TASK_MAX_NUM )
+	{
+		g_OS_Tcb_HighRdyP = tcb_p;
+		g_Prio_HighRdy    = i;
+	}else{
+		g_OS_Tcb_HighRdyP = OS_TCB_TABLE[OS_TASK_MAX_NUM-1];
+		g_Prio_HighRdy    = OS_TASK_MAX_NUM-1;		
+	}
 	OS_EXIT_CRITICAL();
 }
 

@@ -350,19 +350,19 @@ int x = 0, y = 0;
 
 void Task_GUI(void)
 {
-	LCD_Pin_Configuration();
+//	LCD_Pin_Configuration();
 	
-	lcd_init();
+//	lcd_init();
 	
-	LCD_Fill(0x1F);
+//	LCD_Fill(0x1F);
 
 	unsigned short color  = 0;
 	
 	while(1)
 	{
 		OS_Delay(100);
-		LCD_Fill(color++);	
-		LCD_Sync_Frame();		
+//		LCD_Fill(color++);	
+//		LCD_Sync_Frame();		
 		task_gui_ticks++;
 	}
 }

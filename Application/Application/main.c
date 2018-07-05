@@ -12,9 +12,9 @@
 #include "Task_GUI.h"
 #include "Task_LED.h"
 
-static OS_TCB TCB_LED;
-static OS_TCB TCB_GUI;
-static OS_TCB TCB_Demo;
+OS_TCB TCB_LED;
+OS_TCB TCB_GUI;
+OS_TCB TCB_Demo;
 
 OS_STK TASK_1_STK[TASK_1_STK_SIZE];
 OS_STK TASK_2_STK[TASK_2_STK_SIZE];
@@ -40,17 +40,17 @@ int __attribute__((noreturn)) main(void)
 	LRT_OSTask_Create(
 					&TCB_Demo,Task_Demo,
 					&TASK_1_STK[TASK_1_STK_SIZE-1],
-					2);
+					0);
 	
     LRT_OSTask_Create(
 					&TCB_LED,Task_LED, 
 					&TASK_2_STK[TASK_2_STK_SIZE-1],
-					5);
+					1);
 	
 	LRT_OSTask_Create(
 					&TCB_GUI,Task_GUI, 
 					&TASK_Timer_STK[TASK_Timer_STK_SIZE-1],
-					9);
+					2);
 	
 	LRT_OS_Start();
 	

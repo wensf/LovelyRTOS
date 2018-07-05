@@ -2,7 +2,7 @@
 #include "OSType.h"
 #include "LRT_LED.h"
 
-LRT_Driver LRT_Driver_Table[] = 
+static LRT_Driver LRT_Driver_Table[] = 
 {
 	Driver_LED_init,
 };

@@ -20,7 +20,7 @@ void SysTick_Handler(void)
 		if ( tcb_p->State == TASK_DELAY ) 
 		{
 			--tcb_p->TimeDly;
-			if ( tcb_p->TimeDly == 0){ 
+			if ( tcb_p->TimeDly <= 0){ 
 			  tcb_p->State=TASK_READY;
 			}
 		}
