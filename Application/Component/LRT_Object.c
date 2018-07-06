@@ -6,11 +6,13 @@ LRT_Object* Object_Table[LRT_OBJECT_NR];
 
 LRT_RET LRT_Object_Init(void)
 {
-	LRT_Object* op = Object_Table[0];
-	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
+<<<<<<< HEAD
 		*(&op) = (LRT_Object*)0;
+=======
+		Object_Table[i] = LRT_NULL;
+>>>>>>> refs/remotes/origin/master
 	}
 	
 	return LRT_OK;
@@ -41,7 +43,7 @@ int LRT_Open( const char *object_name, int method, int attr )
 	{
 		if ( 0 != Object_Table[i] )
 		{
-			if ( !strncmp( Object_Table[i]->object_name,object_name, LRT_OBJECT_NAME_SIZE) )
+			if ( !strncmp( Object_Table[i]->object_name,object_name, LRT_OBJECT_NAME_NR) )
 			{
 				return Object_Table[i]->identifier;
 			}
