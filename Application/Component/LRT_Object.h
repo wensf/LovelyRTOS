@@ -4,7 +4,7 @@
 #include "OSType.h"
 
 #define LRT_OBJECT_NR        		1
-#define LRT_OBJECT_NAME_SIZE       16
+#define LRT_OBJECT_NAME_NR         16
 
 #define OBJECT_TYPE_IO              0
 
@@ -13,7 +13,7 @@ typedef struct LRT_oofs_tag LRT_oofs;
 
 struct Object_tag
 {
-	char object_name[LRT_OBJECT_NAME_SIZE];
+	char object_name[LRT_OBJECT_NAME_NR];
 	int object_type;
 	int identifier;
 	LRT_oofs *oofs;	

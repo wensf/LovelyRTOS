@@ -76,7 +76,7 @@ void LRT_OSTask_Create(OS_TCB *tcb,OS_TASK task,OS_STK *stk,OS_U8 prio)
     
     *(--p_stk) = (OS_STK)0x01000000uL;                          // xPSR
     *(--p_stk) = (OS_STK)task;                                  // Entry Point
-    *(--p_stk) = (OS_STK)OS_Task_End;                                     // R14 (LR)
+    *(--p_stk) = (OS_STK)OS_Task_End;                           // R14 (LR)
     *(--p_stk) = (OS_STK)0x12121212uL;                          // R12
     *(--p_stk) = (OS_STK)0x03030303uL;                          // R3
     *(--p_stk) = (OS_STK)0x02020202uL;                          // R2

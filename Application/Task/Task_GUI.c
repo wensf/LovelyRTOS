@@ -356,7 +356,7 @@ void Task_GUI(void)
 	
 //	LCD_Fill(0x1F);
 
-	unsigned short color  = 0;
+//	unsigned short color  = 0;
 	
 	while(1)
 	{
