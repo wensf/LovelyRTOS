@@ -8,11 +8,7 @@ LRT_RET LRT_Object_Init(void)
 {
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-<<<<<<< HEAD
-		*(&op) = (LRT_Object*)0;
-=======
 		Object_Table[i] = LRT_NULL;
->>>>>>> refs/remotes/origin/master
 	}
 	
 	return LRT_OK;
