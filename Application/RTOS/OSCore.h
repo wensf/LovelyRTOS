@@ -4,8 +4,10 @@
 
 #include "OSTask.h"
 
-void OS_Start(void);
+void LRT_OS_Start(void);
 void LRT_OS_Int(void);
 void OS_Delay(OS_U32 ticks);
+
+#define LRT_Printf  printf
 
 #endif

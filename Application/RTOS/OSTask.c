@@ -1,7 +1,7 @@
-
-#include <stdio.h>
+#include "OSType.h"
 #include "OSTask.h"
 #include "OSCore.h"
+#include "CPU_Port.h"
 
 OS_TCB TCB_IDLE;
 OS_STK TASK_IDLE_STK[TASK_IDLE_STK_SIZE];
@@ -20,34 +20,40 @@ unsigned long task_idle_tick;
 
 void OS_Task_Idle(void)
 {
-		while(1)
-		{
-			__asm("WFI"); 
-			task_idle_tick++;
-		}
+	while(1)
+	{ 
+		task_idle_tick++;
+		CPU_TO_SLEEP();		
+	}
 }
 
 void OS_Task_Switch(void)
 {
-		int i;
-		OS_TCBP tcb_p;
-		OS_USE_CRITICAL
-		for ( i = 0; i < OS_TASK_MAX_NUM; i++ )    	
-		{
-			tcb_p = OS_TCB_TABLE[i];
-			if(tcb_p == NULL) continue;
-			if(tcb_p->State==TASK_READY) break;
-		}
-		OS_ENTER_CRITICAL();
-		g_OS_Tcb_HighRdyP=tcb_p;
-		g_Prio_HighRdy=i;
-		OS_EXIT_CRITICAL();
+	int i;
+	OS_TCBP tcb_p;
+	OS_USE_CRITICAL
+	for ( i = 0; i < OS_TASK_MAX_NUM; i++ )    	
+	{
+		tcb_p = OS_TCB_TABLE[i];
+		if( tcb_p == NULL ) continue;
+		if( tcb_p->State == TASK_READY ) break;
+	}
+	OS_ENTER_CRITICAL();
+	if ( i < OS_TASK_MAX_NUM )
+	{
+		g_OS_Tcb_HighRdyP = tcb_p;
+		g_Prio_HighRdy    = i;
+	}else{
+		g_OS_Tcb_HighRdyP = OS_TCB_TABLE[OS_TASK_MAX_NUM-1];
+		g_Prio_HighRdy    = OS_TASK_MAX_NUM-1;		
+	}
+	OS_EXIT_CRITICAL();
 }
 
 void OS_Task_Delete(OS_U8 prio)
 {
-    if(prio >= OS_TASK_MAX_NUM) return;
-    OS_TCB_TABLE[prio]=0;
+    if ( prio >= OS_TASK_MAX_NUM ) return;
+    OS_TCB_TABLE[prio] = 0;
 }
 
 void OS_Task_End(void)
@@ -57,7 +63,7 @@ void OS_Task_End(void)
     OS_PendSV_Trigger();
 }
 
-void OS_Task_Create(OS_TCB *tcb,OS_TASK task,OS_STK *stk,OS_U8 prio)
+void LRT_OSTask_Create(OS_TCB *tcb,OS_TASK task,OS_STK *stk,OS_U8 prio)
 {   
     OS_USE_CRITICAL
     OS_STK  *p_stk; 

@@ -34,6 +34,9 @@ OSCtxSw         PROC
                     
 OSStart_Asm     PROC
                 EXPORT  OSStart_Asm
+					
+	extern 	g_OS_CPU_ExceptStkBase		
+		
                 LDR     R0, =NVIC_SYSPRI14                                  ; Set the PendSV exception priority
                 LDR     R1, =NVIC_PENDSV_PRI
                 STRB    R1, [R0]
