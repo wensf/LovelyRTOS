@@ -8,6 +8,8 @@
 #include "OSCore.h"
 #include "LRT_Object.h"
 #include "LRT_Driver.h"
+#include "LRT_Input.h"
+#include "LRT_Fb.h"
 
 #include "Task_GUI.h"
 #include "Task_LED.h"
@@ -33,10 +35,18 @@ void Task_Demo(void)
 
 int __attribute__((noreturn)) main(void)
 {
+	/**
+	 * LovelyRTOS Kernel Component Initialize
+	 */
 	LRT_OS_Int();
 	LRT_Object_Init();
+	LRT_Input_Init();
+	LRT_Fb_Init();
 	LRT_Driver_Init();
 	
+	/**
+	 * User Layer Task ( Thread ) Create
+	 */
 	LRT_OSTask_Create(
 					&TCB_Demo,Task_Demo,
 					&TASK_1_STK[TASK_1_STK_SIZE-1],
@@ -52,8 +62,15 @@ int __attribute__((noreturn)) main(void)
 					&TASK_Timer_STK[TASK_Timer_STK_SIZE-1],
 					2);
 	
+	/**
+	 * LovelyRTOS Start To Run
+	 */
+	
 	LRT_OS_Start();
 	
+	/**
+	 * Should be never reach here
+	 */
 	for ( ; ; )
 	{
 		__asm("WFI");

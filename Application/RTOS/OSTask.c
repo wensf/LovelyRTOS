@@ -8,7 +8,6 @@ OS_STK TASK_IDLE_STK[TASK_IDLE_STK_SIZE];
 
 OS_STK OS_CPU_ExceptStk[OS_EXCEPT_STK_SIZE];
 
-
 OS_TCBP OS_TCB_TABLE[OS_TASK_MAX_NUM];
 OS_TCBP g_OS_Tcb_CurP; 
 OS_TCBP g_OS_Tcb_HighRdyP;
@@ -36,7 +35,7 @@ void OS_Task_Switch(void)
 	{
 		tcb_p = OS_TCB_TABLE[i];
 		if( tcb_p == NULL ) continue;
-		if( tcb_p->State == TASK_READY ) break;
+		if( tcb_p->State  == TASK_READY ) break;
 	}
 	OS_ENTER_CRITICAL();
 	if ( i < OS_TASK_MAX_NUM )
@@ -76,7 +75,7 @@ void LRT_OSTask_Create(OS_TCB *tcb,OS_TASK task,OS_STK *stk,OS_U8 prio)
     
     *(--p_stk) = (OS_STK)0x01000000uL;                          // xPSR
     *(--p_stk) = (OS_STK)task;                                  // Entry Point
-    *(--p_stk) = (OS_STK)OS_Task_End;                                     // R14 (LR)
+    *(--p_stk) = (OS_STK)OS_Task_End;                           // R14 (LR)
     *(--p_stk) = (OS_STK)0x12121212uL;                          // R12
     *(--p_stk) = (OS_STK)0x03030303uL;                          // R3
     *(--p_stk) = (OS_STK)0x02020202uL;                          // R2

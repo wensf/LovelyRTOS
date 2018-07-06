@@ -19,11 +19,11 @@ void Task_LED(void)
 		{
 			Task_LED_tick++;
 
-			OS_Delay(1000);
+			OS_Delay(250);
 			
 			LRT_IOCtl ( id, 0, 0 );
 			
-			OS_Delay(1000);
+			OS_Delay(250);
 			
 			LRT_IOCtl ( id, 1, 0 );
 		}
@@ -35,3 +35,4 @@ void Task_LED(void)
 		LRT_Printf("Open LED1 Failed\n");
 	}
 }
+

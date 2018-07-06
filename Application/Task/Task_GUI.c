@@ -188,10 +188,10 @@ void lcd_init(void)
 	LCD_WrDat(0x00); 
 	 
 	LCD_WrCmd(0xC0);    //Power control 
-	LCD_WrDat(0x21);   //VRH[5:0] 
+	LCD_WrDat(0x21);    //VRH[5:0] 
 	 
 	LCD_WrCmd(0xC1);    //Power control 
-	LCD_WrDat(0x12);   //SAP[2:0];BT[3:0] 
+	LCD_WrDat(0x12);    //SAP[2:0];BT[3:0] 
 	 
 	LCD_WrCmd(0xC5);    //VCM control 
 	LCD_WrDat(0x32); 
@@ -356,11 +356,11 @@ void Task_GUI(void)
 	
 //	LCD_Fill(0x1F);
 
-	unsigned short color  = 0;
+//	unsigned short color  = 0;
 	
 	while(1)
 	{
-		OS_Delay(100);
+		OS_Delay(80);
 //		LCD_Fill(color++);	
 //		LCD_Sync_Frame();		
 		task_gui_ticks++;

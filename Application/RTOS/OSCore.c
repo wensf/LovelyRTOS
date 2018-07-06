@@ -38,7 +38,7 @@ void LRT_OS_Int(void)
 	g_OS_CPU_ExceptStkBase = OS_CPU_ExceptStk + OS_EXCEPT_STK_SIZE - 1;
 	
 	CPU_IRQ_DISABLE(); 
-	for( int i = 0; i < OS_TASK_MAX_NUM; i++ )
+	for ( int i = 0; i < OS_TASK_MAX_NUM; i++ )
 	{
 		OS_TCB_TABLE[i] = 0;
 	}

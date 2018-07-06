@@ -10,7 +10,7 @@ LRT_RET LRT_Object_Init(void)
 	
 	for ( int i = 0; i < SIZEOF(Object_Table); i++ )
 	{
-	//	*(&op) = (LRT_Object*)0;
+		*(&op) = (LRT_Object*)0;
 	}
 	
 	return LRT_OK;
