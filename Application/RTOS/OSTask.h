@@ -1,6 +1,8 @@
 #ifndef __OSTASK_H__
 #define __OSTASK_H__
 
+#include "OSType.h"
+
 #define OS_EXCEPT_STK_SIZE 1024
 #define TASK_1_STK_SIZE 512
 #define TASK_2_STK_SIZE 512
@@ -10,15 +12,6 @@
 #define OS_TASK_MAX_NUM 4
 #define OS_HZ 100
 #define OS_A_TICK (1000/OS_HZ)
-
-
-typedef signed char OS_S8;
-typedef signed short OS_S16;
-typedef signed int OS_S32;
-typedef unsigned char OS_U8;
-typedef unsigned short OS_U16;
-typedef unsigned int OS_U32;
-typedef unsigned int OS_STK;
 
 extern void OSStart_Asm(void);
 extern void OSCtxSw(void);
