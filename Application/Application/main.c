@@ -33,8 +33,17 @@ void Task_Demo(void)
 	}
 }	
 
+#include "BSP_UART.h"
+
+void BSP_Init(void)
+{
+	Usart_Config();
+}
+
 int __attribute__((noreturn)) main(void)
 {
+	BSP_Init();
+	
 	/**
 	 * LovelyRTOS Kernel Component Initialize
 	 */
